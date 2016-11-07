@@ -7,3 +7,6 @@ define('DB_HOST', 'localhost');
 define('DB_USER', 'luisanch');
 define('DB_PASS', 'butts12345');
 define('DB_NAME', 'luisanch_db');
+
+define('REQFIELD', '<font color="#FF0000">*</font>');
+?>

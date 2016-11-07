@@ -5,57 +5,50 @@ class AddPostController extends Controller{
 	public $postObject;
 	
 	public function defaultTask(){
-		
 		$this->postObject = new Post();
+		$this->getCategories();
 		$this->set('task', 'add');
-	
-	
 	}
 	
 	public function add(){
-		
-			$this->postObject = new Post();
+		$this->postObject = new Post();
+		$data = array('title'=>$_POST['title'],'content'=>$_POST['content'],'category'=>$_POST['category'],'date'=>$_POST['date']);
+		//$this->getCategories();
 			
-			$data = array('title'=>$_POST['post_title'],'date'=>$_POST['date'],'categoryID'=>$_POST['categoryID'],'content'=>$_POST['post_content']);
-			
-	
-			$result = $this->postObject->addPost($data);
-			
-			$this->set('message', $result);
-			
-		
+		$result = $this->postObject->addPost($data);
+		$this->set('message', $result);
 	}
 	
 	public function edit($pID){
-		
-			$this->postObject = new Post();
-
-			$post = $this->postObject->getPost($pID);
+		$this->postObject = new Post();
+		$post = $this->postObject->getPost($pID);
+		$this->getCategories();
 			
-			$this->set('pID', $_POST['pID']);
-			$this->set('title', $_POST['title']);
-			$this->set('content', $_POST['content']);
-			$this->set('date', $_POST['date']);
-			$this->set('categoryID', $_POST['categoryID']);
-			$this->set('task', 'update');
-			
-		
+		$this->set('pID', $post['pID']);
+		$this->set('title', $post['title']);
+		$this->set('content', $post['content']);
+		$this->set('date', $post['date']);
+		$this->set('category', $post['categoryID']);
+		$this->set('task', 'update');
 	}
 	
-	public function update($pID)
-	{
-            $this->postObject = new Post();
+	public function getCategories(){
+		$this->postObject = new Categories();
+		$categories = $this->postObject->getCategories();
+		$this->set('categories',$categories);
+	}
+	
+	public function update(){
+		$data = array('title'=>$_POST['title'],'content'=>$_POST['content'],'category'=>$_POST['category'],'date'=>$_POST['date'],'pID'=>$_POST['pID']);
 
-	    $post = $this->postObject->getPost($pID);
-            
-            $item1 = $this->set('title',$_POST['title']);
-            $item2 = $this->set('date',$_POST['date']);
-            $item3 = $this->set('categoryID',$_POST['categoryID']);
-            $item4 = $this->set('content',$_POST['content']);
-            
-            $data = array($item1, $item2, $item3, $item4);
-            $result = $this->postObject->addPost($data);
-
+		$this->postObject = new Post();
+		
+		$result = $this->postObject->updatePost($data);
+		$outcome = $this->postObject->getAllPosts();
+		$this->set('posts',$outcome);
+		$this->set('message', $result);
+		$this->getCategories();
+		$this->set('task', 'update');
 	}
 	
 }
